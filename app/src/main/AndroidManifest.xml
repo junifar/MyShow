@@ -15,6 +15,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:authorities="com.rubahapi.myshow"
+            android:name=".data.SunshineProvider"
+            android:exported="false"
+            android:syncable="true"/>
     </application>
-
 </manifest>
