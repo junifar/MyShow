@@ -5,9 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.rubahapi.myshow.R;
 import com.rubahapi.myshow.data.Contact;
@@ -36,26 +34,26 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
         View contactView = inflater.inflate(R.layout.item_contact, parent, false);
 
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
         Contact contact = mContacts.get(position);
 
-        TextView textView = holder.nameTextView;
-        textView.setText(contact.getmName());
+//        TextView textView = holder.nameTextView;
+//        textView.setText(contact.getmName());
 
-        TextView textView1 = holder.onlineTextView;
-        String isOnline = (contact.ismOnline()) ? "Online" : "Offline";
-        textView1.setText(contact.getmImagePath());
+//        TextView textView1 = holder.onlineTextView;
+//        String isOnline = (contact.ismOnline()) ? "Online" : "Offline";
+//        textView1.setText(contact.getmImagePath());
 
         ImageView imageView = holder.showImageView;
         Picasso.with(mContext).load(contact.getmImagePath()).into(imageView);
 
-        Button button = holder.messageButton;
-        button.setText("Message");
+//        Button button = holder.messageButton;
+//        button.setText("Message");
+
 //        super.onBindViewHolder(holder, position, payloads);
     }
 
@@ -74,17 +72,17 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView nameTextView;
-        public TextView onlineTextView;
+//        public TextView nameTextView;
+//        public TextView onlineTextView;
         public ImageView showImageView;
 
-        public Button messageButton;
+//        public Button messageButton;
         public ViewHolder(View itemView) {
             super(itemView);
 
-            nameTextView = (TextView) itemView.findViewById(R.id.contact_name);
-            onlineTextView = (TextView) itemView.findViewById(R.id.online_status);
-            messageButton = (Button) itemView.findViewById(R.id.message_button);
+//            nameTextView = (TextView) itemView.findViewById(R.id.contact_name);
+//            onlineTextView = (TextView) itemView.findViewById(R.id.online_status);
+//            messageButton = (Button) itemView.findViewById(R.id.message_button);
             showImageView = (ImageView) itemView.findViewById(R.id.image_view);
         }
 

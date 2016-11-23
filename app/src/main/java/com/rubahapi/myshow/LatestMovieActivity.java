@@ -2,7 +2,7 @@ package com.rubahapi.myshow;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.rubahapi.myshow.adapter.ContactsAdapter;
@@ -27,8 +27,8 @@ public class LatestMovieActivity extends AppCompatActivity {
 
         rvContacts.setAdapter(adapter);
 
-        rvContacts.setLayoutManager(new LinearLayoutManager(this));
-//        rvContacts.setLayoutManager(new GridLayoutManager(this,2));
+//        rvContacts.setLayoutManager(new LinearLayoutManager(this));
+        rvContacts.setLayoutManager(new GridLayoutManager(this,2));
 
     }
 }
