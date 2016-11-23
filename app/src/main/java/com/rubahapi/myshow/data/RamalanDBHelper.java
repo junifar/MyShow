@@ -32,7 +32,7 @@ public class RamalanDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        Log.i("DB", "DTABASE CREATED");
+        Log.i("DB", "DATABASE CREATED");
         final String SQL_CREATE_QUERY = "CREATE TABLE " + TABLE_RAMALAN + " (" +
                 COLUMN_CITY_ID + " INT," +
                 COLUMN_DT + " INT," +
@@ -44,8 +44,8 @@ public class RamalanDBHelper extends SQLiteOpenHelper {
                 COLUMN_HUMIDITY + " REAL," +
                 COLUMN_PRESSURE + " REAL," +
                 COLUMN_WIND_SPEED + " REAL," +
-                COLUMN_WIND_DEGREE + " INT" +
-                "UNIQUE (" + COLUMN_CITY_ID + "," + COLUMN_DT + ") ON CONFLICT REPLACE" +
+                COLUMN_WIND_DEGREE + " INT, " +
+                " UNIQUE (" + COLUMN_CITY_ID + "," + COLUMN_DT + ") ON CONFLICT REPLACE" +
                 ")";
         sqLiteDatabase.execSQL(SQL_CREATE_QUERY);
     }
