@@ -1,13 +1,16 @@
 package com.rubahapi.myshow;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.widget.Toast;
 
 import com.rubahapi.myshow.adapter.MovieAdapter;
 import com.rubahapi.myshow.data.MovieDBHelper;
@@ -49,31 +52,43 @@ public class LatestMovieActivity extends AppCompatActivity {
         movieAdapter = new MovieAdapter(null);
         rvContacts.setAdapter(movieAdapter);
 
-        new getPopularMoviesTask().execute();
+        if(isOnline()){
+            new getPopularMoviesTask().execute();
+        }else
+        {
+            Toast.makeText(this,"No Connection Available", Toast.LENGTH_LONG);
+        }
 
 //        initDB();
     }
 
-    private void initDB(){
+//    private void initDB(){
+//
+//        ContentValues cv = new ContentValues();
+//        cv.put(MovieDBHelper.COLUMN_TITLE,"Finding Dori2");
+//        cv.put(MovieDBHelper.COLUMN_DESCRIPTION, "Ikan");
+//        cv.put(MovieDBHelper.COLUMN_YEARS, 2005);
+//        cv.put(MovieDBHelper.COLUMN_IMAGE_PATH,"https://1.bp.blogspot.com/-TL9x5j53h2k/Vu62cZieVaI/AAAAAAAADdU/efYOrlGvzrEwwyhil3UIaXReYVtkTW1Pg/s1600/Finding_Dory_4.jpg");
+//
+//        ContentValues cv1 = new ContentValues();
+//        cv1.put(MovieDBHelper.COLUMN_TITLE,"Finding Dorii5");
+//        cv1.put(MovieDBHelper.COLUMN_DESCRIPTION, "Ikan 2");
+//        cv1.put(MovieDBHelper.COLUMN_YEARS, 2005);
+//        cv1.put(MovieDBHelper.COLUMN_IMAGE_PATH,"https://1.bp.blogspot.com/-TL9x5j53h2k/Vu62cZieVaI/AAAAAAAADdU/efYOrlGvzrEwwyhil3UIaXReYVtkTW1Pg/s1600/Finding_Dory_4.jpg");
+//
+//        Uri uri = Uri.parse("content://" + MovieProvider.CONTENT_AUTHORITY + "/movie");
+//        Log.i("DEBUG TEST ", MovieProvider.CONTENT_AUTHORITY);
+//        getContentResolver().delete(uri,null,null);
+//        getContentResolver().insert(uri, cv);
+//        getContentResolver().insert(uri, cv1);
+//        getContentResolver().notifyChange(uri, null);
+//    }
 
-        ContentValues cv = new ContentValues();
-        cv.put(MovieDBHelper.COLUMN_TITLE,"Finding Dori2");
-        cv.put(MovieDBHelper.COLUMN_DESCRIPTION, "Ikan");
-        cv.put(MovieDBHelper.COLUMN_YEARS, 2005);
-        cv.put(MovieDBHelper.COLUMN_IMAGE_PATH,"https://1.bp.blogspot.com/-TL9x5j53h2k/Vu62cZieVaI/AAAAAAAADdU/efYOrlGvzrEwwyhil3UIaXReYVtkTW1Pg/s1600/Finding_Dory_4.jpg");
-
-        ContentValues cv1 = new ContentValues();
-        cv1.put(MovieDBHelper.COLUMN_TITLE,"Finding Dorii5");
-        cv1.put(MovieDBHelper.COLUMN_DESCRIPTION, "Ikan 2");
-        cv1.put(MovieDBHelper.COLUMN_YEARS, 2005);
-        cv1.put(MovieDBHelper.COLUMN_IMAGE_PATH,"https://1.bp.blogspot.com/-TL9x5j53h2k/Vu62cZieVaI/AAAAAAAADdU/efYOrlGvzrEwwyhil3UIaXReYVtkTW1Pg/s1600/Finding_Dory_4.jpg");
-
-        Uri uri = Uri.parse("content://" + MovieProvider.CONTENT_AUTHORITY + "/movie");
-        Log.i("DEBUG TEST ", MovieProvider.CONTENT_AUTHORITY);
-        getContentResolver().delete(uri,null,null);
-        getContentResolver().insert(uri, cv);
-        getContentResolver().insert(uri, cv1);
-        getContentResolver().notifyChange(uri, null);
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     class getPopularMoviesTask extends AsyncTask<Void, Void, PopularMovie>{
