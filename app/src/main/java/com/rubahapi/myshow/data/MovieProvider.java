@@ -100,6 +100,7 @@ public class MovieProvider extends ContentProvider {
                         );
                         returnCount++;
                     }
+                    writableDatabase.setTransactionSuccessful();
                 }catch (Exception e){
                     returnCount = 0;
                 }finally {

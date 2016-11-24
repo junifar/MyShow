@@ -30,11 +30,11 @@ public class MovieDBHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_QUERY = "CREATE TABLE " + TABLE_MOVIES_NAME + "(" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 COLUMN_TITLE + " TEXT NOT NULL," +
-                COLUMN_YEARS + " INTEGER NOT NULL," +
+                COLUMN_YEARS + " INTEGER," +
                 COLUMN_DURATION + " TEXT," +
                 COLUMN_RATING + " TEXT," +
                 COLUMN_DESCRIPTION + " TEXT," +
-                COLUMN_IMAGE_PATH + " TEXT NOT NULL," +
+                COLUMN_IMAGE_PATH + " TEXT," +
                 " UNIQUE (" + COLUMN_TITLE + ") ON CONFLICT REPLACE" +
                 ")";
         sqLiteDatabase.execSQL(SQL_CREATE_QUERY);

@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.rubahapi.myshow.R;
-import com.rubahapi.myshow.data.Contact;
+import com.rubahapi.myshow.pojo.popular.PopularMovie;
+import com.rubahapi.myshow.pojo.popular.Result;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -19,12 +20,17 @@ import java.util.List;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
 
-    private List<Contact> mContacts;
+    private PopularMovie mPopularMovies;
+    private List<Result> results;
     private Context mContext;
 
-    public ContactsAdapter(Context context, List<Contact> contacts) {
-        mContacts = contacts;
+    public ContactsAdapter(Context context, PopularMovie popularMovies) {
+        mPopularMovies = popularMovies;
         mContext = context;
+    }
+
+    public void updateContacts(PopularMovie popularMovies){
+        mPopularMovies = popularMovies;
     }
 
     @Override
@@ -39,15 +45,17 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
-        Contact contact = mContacts.get(position);
+//        Contact contact = mContacts.get(position);
+        results = mPopularMovies.getResults();
+        Result result = results.get(position);
 
         ImageView imageView = holder.showImageView;
-        Picasso.with(mContext).load(contact.getmImagePath()).into(imageView);
+        Picasso.with(mContext).load("http://image.tmdb.org/t/p/w185/" + result.getPosterPath()).into(imageView);
     }
 
     @Override
     public int getItemCount(){
-        return mContacts.size();
+        return results.size();
     }
 
 //    private Context getContext(){
