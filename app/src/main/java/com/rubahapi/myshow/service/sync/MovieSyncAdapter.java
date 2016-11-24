@@ -1,12 +1,16 @@
 package com.rubahapi.myshow.service.sync;
 
 import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.rubahapi.myshow.data.MovieDBHelper;
@@ -82,6 +86,35 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
         }finally {
             if(null != connection){
                 connection.disconnect();
+            }
+        }
+    }
+
+    public static void SyncStart(Context context){
+        AccountManager accountManager = (AccountManager) context.getSystemService(context.ACCOUNT_SERVICE);
+        Account account = new Account("juni",MovieProvider.CONTENT_AUTHORITY);
+
+        String password = accountManager.getPassword(account);
+        if(null == password){
+            boolean success = accountManager.addAccountExplicitly(account,"",null);
+            if(success){
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+                    SyncRequest request = new SyncRequest.Builder().
+                            syncPeriodic(60 * 180, (60 * 180) / 3).
+                            setSyncAdapter(account, MovieProvider.CONTENT_AUTHORITY).
+                            setExtras(new Bundle()).build();
+                    ContentResolver.requestSync(request);
+                } else {
+                    ContentResolver.addPeriodicSync(account,
+                            MovieProvider.CONTENT_AUTHORITY, new Bundle(), 60 * 180);
+                }
+
+                ContentResolver.setSyncAutomatically(account, MovieProvider.CONTENT_AUTHORITY, true);
+
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                ContentResolver.requestSync(account, MovieProvider.CONTENT_AUTHORITY, bundle);
             }
         }
     }

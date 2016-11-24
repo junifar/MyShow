@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
 import com.rubahapi.myshow.adapter.MovieAdapter;
 import com.rubahapi.myshow.data.MovieDBHelper;
@@ -18,6 +17,7 @@ import com.rubahapi.myshow.data.MovieProvider;
 import com.rubahapi.myshow.model.MovieURL;
 import com.rubahapi.myshow.pojo.popular.PopularMovie;
 import com.rubahapi.myshow.pojo.popular.Result;
+import com.rubahapi.myshow.service.sync.MovieSyncAdapter;
 import com.rubahapi.myshow.singleton.GsonSingleton;
 
 import java.io.BufferedReader;
@@ -53,14 +53,14 @@ public class LatestMovieActivity extends AppCompatActivity {
         movieAdapter = new MovieAdapter(null);
         rvContacts.setAdapter(movieAdapter);
 
-//        getLoaderManager().initLoader(MOVIE_LOADER,null,this);
+        MovieSyncAdapter.SyncStart(this);
 
-        if(isOnline()){
-            new getPopularMoviesTask().execute();
-        }else
-        {
-            Toast.makeText(this,"No Connection Available", Toast.LENGTH_LONG);
-        }
+//        if(isOnline()){
+//            new getPopularMoviesTask().execute();
+//        }else
+//        {
+//            Toast.makeText(this,"No Connection Available", Toast.LENGTH_LONG);
+//        }
 
 //        initDB();
     }
@@ -93,6 +93,7 @@ public class LatestMovieActivity extends AppCompatActivity {
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
+
 
     class getPopularMoviesTask extends AsyncTask<Void, Void, PopularMovie>{
         @Override
