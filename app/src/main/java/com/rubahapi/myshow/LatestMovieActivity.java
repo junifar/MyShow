@@ -31,6 +31,7 @@ public class LatestMovieActivity extends AppCompatActivity {
 
 //    ArrayList<Contact> contacts;
 //    ContactsAdapter contactsAdapter;
+    public  static final int MOVIE_LOADER = 100;
     MovieAdapter movieAdapter;
 
     @Override
@@ -51,6 +52,8 @@ public class LatestMovieActivity extends AppCompatActivity {
         rvContacts.setLayoutManager(new GridLayoutManager(this,2));
         movieAdapter = new MovieAdapter(null);
         rvContacts.setAdapter(movieAdapter);
+
+//        getLoaderManager().initLoader(MOVIE_LOADER,null,this);
 
         if(isOnline()){
             new getPopularMoviesTask().execute();
