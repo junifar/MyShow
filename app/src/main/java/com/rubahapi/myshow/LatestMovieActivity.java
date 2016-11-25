@@ -13,9 +13,10 @@ import android.support.v7.widget.RecyclerView;
 import com.rubahapi.myshow.adapter.MovieAdapter;
 import com.rubahapi.myshow.data.MovieDBHelper;
 import com.rubahapi.myshow.data.MovieProvider;
+import com.rubahapi.myshow.listener.OnMovieClickListener;
 import com.rubahapi.myshow.service.sync.MovieSyncAdapter;
 
-public class LatestMovieActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class LatestMovieActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, OnMovieClickListener {
 
 //    ArrayList<Contact> contacts;
 //    ContactsAdapter contactsAdapter;
@@ -42,19 +43,7 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
 //        movieAdapter = new MovieAdapter();
         rvContacts.setAdapter(movieAdapter);
 
-        getLoaderManager().initLoader(MOVIE_LOADER, null, this).forceLoad();
-
-//        Uri uri = Uri.parse("content://" + MovieProvider.CONTENT_AUTHORITY + "/movie");
-//        Cursor cursor = (Cursor) new CursorLoader(LatestMovieActivity.this,
-//                uri,
-//                new String[]{
-//                        MovieDBHelper.COLUMN_IMAGE_PATH
-//                },
-//                null,
-//                null,
-//                null);
-//
-//        movieAdapter.updateResult(cursor);
+        getLoaderManager().initLoader(MOVIE_LOADER, null, this);
 
         MovieSyncAdapter.SyncStart(this);
 
@@ -101,7 +90,8 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         Uri uri = Uri.parse("content://" + MovieProvider.CONTENT_AUTHORITY + "/movie");
         if (i == MOVIE_LOADER){
-            return new CursorLoader(LatestMovieActivity.this,
+            Loader<Cursor> loader = new CursorLoader(
+                    LatestMovieActivity.this,
                     uri,
                     new String[]{
                             MovieDBHelper.COLUMN_IMAGE_PATH
@@ -109,6 +99,15 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
                     null,
                     null,
                     null);
+            return loader;
+//            return new CursorLoader(LatestMovieActivity.this,
+//                    uri,
+//                    new String[]{
+//                            MovieDBHelper.COLUMN_IMAGE_PATH
+//                    },
+//                    null,
+//                    null,
+//                    null);
         }
         return null;
     }
@@ -122,6 +121,11 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         movieAdapter.updateResult(null);
+    }
+
+    @Override
+    public void onMovieClick(int id) {
+
     }
 
 
