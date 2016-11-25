@@ -18,11 +18,11 @@
 
         </activity>
 
-        <provider
-            android:name=".data.SunshineProvider"
-            android:authorities="com.rubahapi.myshow"
-            android:exported="false"
-            android:syncable="true" />
+        <!--<provider-->
+            <!--android:name=".data.SunshineProvider"-->
+            <!--android:authorities="com.rubahapi.myshow"-->
+            <!--android:exported="false"-->
+            <!--android:syncable="true" />-->
 
         <activity android:name=".LatestMovieActivity">
             <intent-filter>
