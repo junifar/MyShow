@@ -16,7 +16,8 @@ import android.util.Log;
 public class MovieProvider extends ContentProvider {
 
     private static final int MOVIE = 100;
-    public static final String CONTENT_AUTHORITY = "com.rubahapi";
+    public static final String CONTENT_AUTHORITY = "com.rubahapi.myshow";
+//    public final String CONTENT_AUTHORITY = this.getContext().getResources().getString(R.string.content_authority);
     private MovieDBHelper dbHelper;
     private UriMatcher mUriMatcher;
 

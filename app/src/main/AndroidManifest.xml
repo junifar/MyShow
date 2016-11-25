@@ -3,6 +3,7 @@
     package="com.rubahapi.myshow">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
@@ -32,7 +33,7 @@
         </activity>
 
         <provider
-            android:authorities="com.rubahapi"
+            android:authorities="@string/content_authority"
             android:name=".data.MovieProvider"
             android:exported="false"
             android:syncable="true"/>
@@ -51,6 +52,6 @@
             <meta-data android:name="android.content.SyncAdapter" android:resource="@xml/syncadapter"/>
         </service>
 
-        <service android:name=".service.MovieService"/>
+        <!--<service android:name=".service.MovieService"/>-->
     </application>
 </manifest>
