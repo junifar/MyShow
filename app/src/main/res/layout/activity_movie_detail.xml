@@ -62,10 +62,9 @@
                     <TextView
                         android:id="@+id/textViewRating"
                         android:layout_width="match_parent"
-                        android:layout_height="20dp"
+                        android:layout_height="30dp"
                         android:text="Rating"
-                        android:textSize="15dp"
-                        android:paddingBottom="20dp"/>
+                        android:textSize="15dp"/>
                     <Button
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"

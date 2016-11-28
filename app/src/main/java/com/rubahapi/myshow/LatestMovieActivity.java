@@ -169,6 +169,7 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
                     cv.put(MovieDBHelper.COLUMN_DESCRIPTION, result.getOverview());
                     cv.put(MovieDBHelper.COLUMN_YEARS, result.getReleaseDate());
                     cv.put(MovieDBHelper.COLUMN_IMAGE_PATH, result.getPosterPath());
+                    cv.put(MovieDBHelper.COLUMN_RATING, result.getVoteAverage() + "/10");
                     contentValues[i] = cv;
                 }
 
