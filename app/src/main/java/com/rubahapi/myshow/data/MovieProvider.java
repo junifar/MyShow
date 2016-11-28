@@ -32,7 +32,7 @@ public class MovieProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionargs, String sortOrder) {
-        Cursor retCursor;
+        Cursor retCursor = null;
 
         switch(mUriMatcher.match(uri)){
             case MOVIE :
@@ -45,10 +45,10 @@ public class MovieProvider extends ContentProvider {
                         null,
                         sortOrder);
                 retCursor.setNotificationUri(getContext().getContentResolver(), uri);
-                retCursor.close();
+//                retCursor.close();
                 break;
         }
-        return null;
+        return retCursor;
     }
 
     @Nullable

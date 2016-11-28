@@ -74,7 +74,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 cv.put(MovieDBHelper.COLUMN_TITLE, result.getTitle());
                 cv.put(MovieDBHelper.COLUMN_DESCRIPTION, result.getOverview());
                 cv.put(MovieDBHelper.COLUMN_YEARS, result.getReleaseDate());
-                cv.put(MovieDBHelper.COLUMN_IMAGE_PATH,"http://image.tmdb.org/t/p/w185/" + result.getPosterPath());
+                cv.put(MovieDBHelper.COLUMN_IMAGE_PATH, result.getPosterPath());
                 contentValues[i] = cv;
             }
 
