@@ -59,6 +59,15 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LatestMovieActivity"/>
         </activity>
+
+        <activity android:name=".SettingsActivity"
+            android:label="Settings"
+            android:parentActivityName=".LatestMovieActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.rubahapi.myshow.LatestMovieActivity" />
+        </activity>
     </application>
 
 </manifest>
