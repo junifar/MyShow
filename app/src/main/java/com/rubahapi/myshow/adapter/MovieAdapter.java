@@ -3,7 +3,6 @@ package com.rubahapi.myshow.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.ImageView;
 import com.rubahapi.myshow.LatestMovieActivity;
 import com.rubahapi.myshow.R;
 import com.rubahapi.myshow.data.MovieDBHelper;
+import com.rubahapi.myshow.listener.OnMovieClickListener;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -21,9 +21,11 @@ import com.squareup.picasso.Picasso;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
 
     Cursor cursor;
+    OnMovieClickListener onMovieClickListener;
 
-    public MovieAdapter(Cursor cursor) {
+    public MovieAdapter(Cursor cursor, OnMovieClickListener onMovieClickListener) {
         this.cursor = cursor;
+        this.onMovieClickListener = onMovieClickListener;
     }
 
     public void updateResult(Cursor cursor){
@@ -56,7 +58,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
         if(null != cursor){
             cursor.moveToPosition(position);
-            Log.i("RESULT", "http://image.tmdb.org/t/p/w185" + cursor.getString(1));
             Picasso.with(context).load("http://image.tmdb.org/t/p/w185" + cursor.getString(getArrayPosition(MovieDBHelper.COLUMN_IMAGE_PATH))).into(holder.imageView);
         }
     }
@@ -71,12 +72,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         return 0;
     }
 
-    public class ViewHolder extends  RecyclerView.ViewHolder {
+    public class ViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView imageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image_view);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            cursor.moveToPosition(position);
+            onMovieClickListener.onMovieClick(position);
         }
     }
 }

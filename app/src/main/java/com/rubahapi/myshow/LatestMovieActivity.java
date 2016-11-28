@@ -4,6 +4,7 @@ import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.rubahapi.myshow.adapter.MovieAdapter;
@@ -51,7 +53,7 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
         RecyclerView rvContacts = (RecyclerView) findViewById(R.id.rvContacts);
 
         rvContacts.setLayoutManager(new GridLayoutManager(this,2));
-        movieAdapter = new MovieAdapter(null);
+        movieAdapter = new MovieAdapter(null, this);
         rvContacts.setAdapter(movieAdapter);
 
         getLoaderManager().initLoader(MOVIE_LOADER, null, this);
@@ -101,6 +103,10 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
 
     @Override
     public void onMovieClick(int id) {
+        Log.i("INFO", String.valueOf(id));
+        Intent intent = new Intent(LatestMovieActivity.this, MovieDetail.class);
+        intent.putExtra(MovieDetail.EXTRA_ID, id);
+        this.startActivity(intent);
 
     }
 
