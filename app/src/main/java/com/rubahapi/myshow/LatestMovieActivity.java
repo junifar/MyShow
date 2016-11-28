@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -40,7 +41,12 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
 
     public static final String[] MOVIE_COLUMNS = {
             MovieDBHelper.TABLE_MOVIES_NAME + "." + MovieDBHelper.COLUMN_ID,
-            MovieDBHelper.COLUMN_IMAGE_PATH
+            MovieDBHelper.COLUMN_IMAGE_PATH,
+            MovieDBHelper.COLUMN_TITLE,
+            MovieDBHelper.COLUMN_YEARS,
+            MovieDBHelper.COLUMN_DURATION,
+            MovieDBHelper.COLUMN_RATING,
+            MovieDBHelper.COLUMN_DESCRIPTION
     };
 
     MovieAdapter movieAdapter;
@@ -52,8 +58,12 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
 
         RecyclerView rvContacts = (RecyclerView) findViewById(R.id.rvContacts);
 
-        rvContacts.setLayoutManager(new GridLayoutManager(this,2));
-        movieAdapter = new MovieAdapter(null, this);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            rvContacts.setLayoutManager(new GridLayoutManager(this,4));
+        }else{
+            rvContacts.setLayoutManager(new GridLayoutManager(this,2));
+        }
+        movieAdapter = new MovieAdapter(null, this, this);
         rvContacts.setAdapter(movieAdapter);
 
         getLoaderManager().initLoader(MOVIE_LOADER, null, this);

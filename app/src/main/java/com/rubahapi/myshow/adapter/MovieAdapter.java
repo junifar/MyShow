@@ -22,10 +22,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     Cursor cursor;
     OnMovieClickListener onMovieClickListener;
+    Context context;
 
-    public MovieAdapter(Cursor cursor, OnMovieClickListener onMovieClickListener) {
+    public MovieAdapter(Cursor cursor, OnMovieClickListener onMovieClickListener, Context context) {
         this.cursor = cursor;
         this.onMovieClickListener = onMovieClickListener;
+        this.context = context;
     }
 
     public void updateResult(Cursor cursor){
@@ -58,6 +60,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
         if(null != cursor){
             cursor.moveToPosition(position);
+//            if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+//                Picasso.with(context).load("http://image.tmdb.org/t/p/w342" + cursor.getString(getArrayPosition(MovieDBHelper.COLUMN_IMAGE_PATH))).into(holder.imageView);
+//            }else{
+//                Picasso.with(context).load("http://image.tmdb.org/t/p/w185" + cursor.getString(getArrayPosition(MovieDBHelper.COLUMN_IMAGE_PATH))).into(holder.imageView);
+//            }
             Picasso.with(context).load("http://image.tmdb.org/t/p/w185" + cursor.getString(getArrayPosition(MovieDBHelper.COLUMN_IMAGE_PATH))).into(holder.imageView);
         }
     }
