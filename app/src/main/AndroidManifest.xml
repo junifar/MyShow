@@ -38,10 +38,11 @@
             android:syncable="true" />
 
         <provider
-            android:authorities="@string/content_authority"
+            android:authorities="com.rubahapi"
             android:name=".data.VideoProvider"
             android:exported="false"
             android:syncable="true"/>
+
 
         <!-- <service android:name=".service.authservice.MovieAuthService"> -->
         <!-- <intent-filter> -->
@@ -61,6 +62,7 @@
 
         <service android:name=".service.MovieService"/>
         <service android:name=".service.VideoService"/>
+
         <activity android:name=".MovieDetail"
             android:label="Movie Detail"
             android:parentActivityName=".LatestMovieActivity">

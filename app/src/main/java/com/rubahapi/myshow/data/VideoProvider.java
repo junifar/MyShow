@@ -9,37 +9,35 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
-import static com.rubahapi.myshow.data.MovieProvider.CONTENT_AUTHORITY;
-
 /**
  * Created by prasetia on 11/29/2016.
  */
 
 public class VideoProvider extends ContentProvider {
 
-    private static final int VIDEO = 100;
-//    public static final String CONTENT_AUTHORITY = "com.rubahapi.myshow";
+    private static final int VIDEO = 200;
+    public static final String CONTENT_AUTHORITY = "com.rubahapi";
     //    public final String CONTENT_AUTHORITY = this.getContext().getResources().getString(R.string.content_authority);
-    private VideoDBHelper dbHelper;
+    private MovieDBHelper dbHelper;
     private UriMatcher mUriMatcher;
 
     @Override
     public boolean onCreate() {
-        dbHelper = new VideoDBHelper(getContext());
+        dbHelper = new MovieDBHelper(getContext());
         mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        mUriMatcher.addURI(CONTENT_AUTHORITY, "video/#", VIDEO);
+        mUriMatcher.addURI(CONTENT_AUTHORITY, "video", VIDEO);
         return true;
     }
 
     @Nullable
     @Override
-    public Cursor query(Uri uri, String[] projecttion, String selection, String[] selectionargs, String sortOrder) {
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionargs, String sortOrder) {
         Cursor cursor = null;
         switch (mUriMatcher.match(uri)){
             case VIDEO:
                 cursor = dbHelper.getReadableDatabase().query(
-                        VideoDBHelper.TABLE_VIDEOS_NAME,
-                        projecttion,
+                        MovieDBHelper.TABLE_VIDEOS_NAME,
+                        projection,
                         selection,
                         selectionargs,
                         null,
@@ -69,7 +67,7 @@ public class VideoProvider extends ContentProvider {
         switch (mUriMatcher.match(uri)){
             case VIDEO:
                 long id = dbHelper.getWritableDatabase().insert(
-                        VideoDBHelper.TABLE_VIDEOS_NAME,
+                        MovieDBHelper.TABLE_VIDEOS_NAME,
                         null,
                         contentValues
                 );
@@ -83,7 +81,7 @@ public class VideoProvider extends ContentProvider {
         switch (mUriMatcher.match(uri)){
             case VIDEO:
                 int countDeleted = dbHelper.getWritableDatabase().delete(
-                        VideoDBHelper.TABLE_VIDEOS_NAME,
+                        MovieDBHelper.TABLE_VIDEOS_NAME,
                         selection,
                         selectionargs
                 );
@@ -97,7 +95,7 @@ public class VideoProvider extends ContentProvider {
         switch (mUriMatcher.match(uri)){
             case VIDEO:
                 int countUpdated = dbHelper.getWritableDatabase().update(
-                        VideoDBHelper.TABLE_VIDEOS_NAME,
+                        MovieDBHelper.TABLE_VIDEOS_NAME,
                         contentValues,
                         selection,
                         selectionargs
@@ -113,23 +111,26 @@ public class VideoProvider extends ContentProvider {
             case VIDEO:
                 int returnCount = 0;
 
-                SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
-                sqLiteDatabase.beginTransaction();
+                SQLiteDatabase writableDatabase= dbHelper.getWritableDatabase();
+                writableDatabase.beginTransaction();
                 try {
                     for (ContentValues cv : values) {
-                        sqLiteDatabase.insert(
-                                VideoDBHelper.TABLE_VIDEOS_NAME,
+                        writableDatabase.insert(
+                                MovieDBHelper.TABLE_VIDEOS_NAME,
                                 null,
                                 cv
                         );
                         returnCount++;
                     }
-                    sqLiteDatabase.setTransactionSuccessful();
-                } catch (Exception e) {
-                    returnCount = 0;
-                } finally {
-                    sqLiteDatabase.endTransaction();
+                    writableDatabase.setTransactionSuccessful();
                 }
+                catch (Exception e) {
+                    returnCount = 0;
+                }
+                finally {
+                    writableDatabase.endTransaction();
+                }
+                return returnCount;
         }
         return 0;
     }

@@ -6,8 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.rubahapi.myshow.data.MovieProvider;
-import com.rubahapi.myshow.data.VideoDBHelper;
+import com.rubahapi.myshow.data.MovieDBHelper;
 import com.rubahapi.myshow.model.MovieURL;
 import com.rubahapi.myshow.pojo.video.Result;
 import com.rubahapi.myshow.pojo.video.Video;
@@ -62,14 +61,14 @@ public class VideoService extends IntentService {
             for (int i=0; i<results.size(); i++){
                 Result result = results.get(i);
                 ContentValues cv = new ContentValues();
-                cv.put(VideoDBHelper.COLUMN_VIDEO_ID, result.getId());
-                cv.put(VideoDBHelper.COLUMN_VIDEO_MOVIE_ID, id);
-                cv.put(VideoDBHelper.COLUMN_VIDEO_NAME, result.getName());
-                cv.put(VideoDBHelper.COLUMN_VIDEO_KEY, result.getKey());
+                cv.put(MovieDBHelper.COLUMN_VIDEO_ID, result.getId());
+                cv.put(MovieDBHelper.COLUMN_VIDEO_MOVIE_ID, id);
+                cv.put(MovieDBHelper.COLUMN_VIDEO_NAME, result.getName());
+                cv.put(MovieDBHelper.COLUMN_VIDEO_KEY, result.getKey());
                 contentValues[i] = cv;
             }
 
-            Uri uri = Uri.parse("content://" + MovieProvider.CONTENT_AUTHORITY + "/video");
+            Uri uri = Uri.parse("content://com.rubahapi/video");
 //            getContentResolver().delete(uri,null,null);
             getContentResolver().bulkInsert(
                     uri,

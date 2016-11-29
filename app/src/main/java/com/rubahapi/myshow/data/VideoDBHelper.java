@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class VideoDBHelper extends SQLiteOpenHelper {
 
+    public static  final  String DB_NAME = "video.sqlite";
+    public static  final int VERSION = 1;
     public static final String TABLE_VIDEOS_NAME = "VIDEOS";
     public static final String COLUMN_VIDEO_ID = "_id";
     public static final String COLUMN_VIDEO_MOVIE_ID = "MOVIE_ID";
@@ -17,18 +19,18 @@ public class VideoDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_VIDEO_KEY = "KEY";
 
     VideoDBHelper(Context context) {
-        super(context, MovieDBHelper.DB_NAME, null, MovieDBHelper.VERSION);
+        super(context, DB_NAME, null, VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         final String SQL_CREATE_QUERY_VIDEO = "CREATE TABLE " + TABLE_VIDEOS_NAME + " (" +
                 COLUMN_VIDEO_ID + " TEXT," +
-                COLUMN_VIDEO_MOVIE_ID + " INTEGER," +
+                COLUMN_VIDEO_MOVIE_ID + " INT," +
                 COLUMN_VIDEO_NAME + " TEXT," +
                 COLUMN_VIDEO_KEY + " TEXT," +
-                "UNIQUE ("+ COLUMN_VIDEO_ID +" ON CONFLICT REPLACE)" +
-                ")";
+                "UNIQUE ("+ COLUMN_VIDEO_ID +") ON CONFLICT REPLACE" +
+                ");";
 
         sqLiteDatabase.execSQL(SQL_CREATE_QUERY_VIDEO);
     }

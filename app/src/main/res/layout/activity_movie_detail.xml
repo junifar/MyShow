@@ -98,6 +98,13 @@
                 android:paddingTop="10dp"
                 android:textSize="20dp"
                 android:text="Trailers:"/>
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/recyclerview_movie_detail"
+                android:paddingTop="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
