@@ -19,7 +19,7 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
 
         addPreferencesFromResource(R.xml.preferences);
 
-//        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_popular)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_movie_category_key)));
 //        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_top_rated)));
     }
 
