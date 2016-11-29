@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.rubahapi.myshow.MovieDetail;
 import com.rubahapi.myshow.R;
 import com.rubahapi.myshow.data.MovieDBHelper;
+import com.rubahapi.myshow.data.VideoDBHelper;
+import com.rubahapi.myshow.listener.OnVideoClickListener;
 
 /**
  * Created by prasetia on 11/29/2016.
@@ -19,10 +21,12 @@ import com.rubahapi.myshow.data.MovieDBHelper;
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> {
     Cursor cursor;
     Context context;
+    OnVideoClickListener onVideoClickListener;
 
-    public VideoAdapter(Cursor cursor, Context context) {
+    public VideoAdapter(Cursor cursor, OnVideoClickListener onVideoClickListener, Context context) {
         this.cursor = cursor;
         this.context = context;
+        this.onVideoClickListener = onVideoClickListener;
     }
 
     public void UpdateResult(Cursor cursor) {
@@ -66,12 +70,20 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         return 0;
     }
 
-    public class ViewHolder extends  RecyclerView.ViewHolder {
+    public class ViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView textViewName;
 
         public ViewHolder(View itemView) {
             super(itemView);
             textViewName = (TextView) itemView.findViewById(R.id.textViewTrailerName);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            cursor.moveToPosition(position);
+            onVideoClickListener.onVideoClick(cursor.getString(getArrayPosition(VideoDBHelper.COLUMN_VIDEO_KEY)));
         }
     }
 }

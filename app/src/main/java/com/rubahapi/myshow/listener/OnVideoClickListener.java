@@ -5,5 +5,5 @@ package com.rubahapi.myshow.listener;
  */
 
 public interface OnVideoClickListener {
-    void onVideoClick(int id);
+    void onVideoClick(String key);
 }

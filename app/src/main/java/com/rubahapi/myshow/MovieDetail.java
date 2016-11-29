@@ -18,10 +18,11 @@ import android.widget.TextView;
 import com.rubahapi.myshow.adapter.VideoAdapter;
 import com.rubahapi.myshow.data.MovieDBHelper;
 import com.rubahapi.myshow.data.MovieProvider;
+import com.rubahapi.myshow.listener.OnVideoClickListener;
 import com.rubahapi.myshow.service.VideoService;
 import com.squareup.picasso.Picasso;
 
-public class MovieDetail extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MovieDetail extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, OnVideoClickListener {
 
     public static final String EXTRA_ID = "ID";
     public static final String EXTRA_MOVIE_ID = "MOVIE_ID";
@@ -48,7 +49,7 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_movie_detail);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MovieDetail.this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mVideoAdapter = new VideoAdapter(null, this);
+        mVideoAdapter = new VideoAdapter(null, this, this);
         mRecyclerView.setAdapter(mVideoAdapter);
 
         getLoaderManager().initLoader(LOADER_RAMALAN_DETAIL, null, this);
@@ -144,5 +145,10 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
 
     }
 
-
+    @Override
+    public void onVideoClick(String key) {
+        Uri uri = Uri.parse("https://www.youtube.com/watch?v="+key);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
+    }
 }

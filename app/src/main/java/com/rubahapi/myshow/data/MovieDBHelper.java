@@ -13,7 +13,8 @@ public class MovieDBHelper extends SQLiteOpenHelper {
     public static  final  String DB_NAME = "movie.sqlite";
     public static  final int VERSION = 3;
     public static final String TABLE_MOVIES_NAME = "MOVIES";
-    public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_REVIEW_ID = "_id";
+    public static final String COLUMN_ID = COLUMN_REVIEW_ID;
     public static final String COLUMN_TITLE = "TITLE";
     public static final String COLUMN_YEARS = "YEARS";
     public static final String COLUMN_DURATION = "DURATION";
@@ -22,10 +23,14 @@ public class MovieDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_IMAGE_PATH = "IMAGE_PATH";
 
     public static final String TABLE_VIDEOS_NAME = "VIDEOS";
-    public static final String COLUMN_VIDEO_ID = "_id";
+    public static final String COLUMN_VIDEO_ID = COLUMN_REVIEW_ID;
     public static final String COLUMN_VIDEO_MOVIE_ID = "MOVIE_ID";
     public static final String COLUMN_VIDEO_NAME = "NAME";
     public static final String COLUMN_VIDEO_KEY = "KEY";
+    public static final String TABLE_REVIEW_NAME = "REVIEW";
+    public static final String COLUMN_REVIEW_AUTHOR = "AUTHOR";
+    public static final String COLUMN_REVIEW_CONTENT = "CONTENT";
+    public static final String COLUMN_REVIE_URL = "URL";
 
 
     public MovieDBHelper(Context context) {
@@ -56,12 +61,21 @@ public class MovieDBHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL(SQL_CREATE_QUERY_VIDEO);
 
+        final String SQL_CREATE_QUERY_REVIEW = "CREATE TABLE " + TABLE_REVIEW_NAME + " (" +
+                COLUMN_REVIEW_ID + " TEXT," +
+                COLUMN_REVIEW_AUTHOR + " TEXT," +
+                COLUMN_REVIEW_CONTENT + " TEXT," +
+                COLUMN_REVIE_URL + " TEXT," +
+                "UNIQUE (" + COLUMN_REVIEW_ID + ") ON CONFLICT REPLACE" +
+                ")";
+        sqLiteDatabase.execSQL(SQL_CREATE_QUERY_REVIEW);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_MOVIES_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_VIDEOS_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_REVIEW_NAME);
         onCreate(sqLiteDatabase);
     }
 }
