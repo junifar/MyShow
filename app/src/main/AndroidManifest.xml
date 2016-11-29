@@ -43,6 +43,12 @@
             android:exported="false"
             android:syncable="true"/>
 
+        <provider
+            android:authorities="com.rubahapi.review"
+            android:name=".data.ReviewProvider"
+            android:exported="false"
+            android:syncable="true"/>
+
 
         <!-- <service android:name=".service.authservice.MovieAuthService"> -->
         <!-- <intent-filter> -->
@@ -62,6 +68,7 @@
 
         <service android:name=".service.MovieService"/>
         <service android:name=".service.VideoService"/>
+        <service android:name=".service.ReviewService"/>
 
         <activity android:name=".MovieDetail"
             android:label="Movie Detail"

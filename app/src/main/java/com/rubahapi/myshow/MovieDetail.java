@@ -15,18 +15,22 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.rubahapi.myshow.adapter.ReviewAdapter;
 import com.rubahapi.myshow.adapter.VideoAdapter;
 import com.rubahapi.myshow.data.MovieDBHelper;
 import com.rubahapi.myshow.data.MovieProvider;
+import com.rubahapi.myshow.listener.OnReviewClickListener;
 import com.rubahapi.myshow.listener.OnVideoClickListener;
+import com.rubahapi.myshow.service.ReviewService;
 import com.rubahapi.myshow.service.VideoService;
 import com.squareup.picasso.Picasso;
 
-public class MovieDetail extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, OnVideoClickListener {
+public class MovieDetail extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, OnVideoClickListener, OnReviewClickListener {
 
     public static final String EXTRA_ID = "ID";
     public static final String EXTRA_MOVIE_ID = "MOVIE_ID";
     public static final int LOADER_RAMALAN_DETAIL = 200;
+    public static final int LOADER_REVIEW = 400;
     public static final int LOADER_VIDEO = 300;
     private int ID;
     private int MOVIE_ID;
@@ -35,8 +39,16 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
             MovieDBHelper.COLUMN_VIDEO_NAME,
             MovieDBHelper.COLUMN_VIDEO_KEY
     };
+    public static final String[] REVIEW_COLUMNS = {
+            MovieDBHelper.TABLE_REVIEW_NAME + "." + MovieDBHelper.COLUMN_REVIEW_ID,
+            MovieDBHelper.COLUMN_REVIEW_AUTHOR,
+            MovieDBHelper.COLUMN_REVIEW_CONTENT,
+            MovieDBHelper.COLUMN_REVIEW_URL
+    };
     VideoAdapter mVideoAdapter ;
+    ReviewAdapter mReviewAdapter;
     RecyclerView mRecyclerView;
+    RecyclerView mRecyclerViewReview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,16 +64,30 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
         mVideoAdapter = new VideoAdapter(null, this, this);
         mRecyclerView.setAdapter(mVideoAdapter);
 
+        mRecyclerViewReview = (RecyclerView) findViewById(R.id.recyclerview_review);
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(MovieDetail.this, LinearLayoutManager.VERTICAL,false);
+        mRecyclerViewReview.setLayoutManager(linearLayoutManager1);
+        mReviewAdapter = new ReviewAdapter(null, this, this);
+        mRecyclerViewReview.setAdapter(mReviewAdapter);
+
         getLoaderManager().initLoader(LOADER_RAMALAN_DETAIL, null, this);
         getLoaderManager().initLoader(LOADER_VIDEO, null, this);
+        getLoaderManager().initLoader(LOADER_REVIEW, null, this);
 
         startVideoService(this.MOVIE_ID);
+        startReviewService(this.MOVIE_ID);
     }
 
     private void startVideoService(int id){
         Intent videoService = new Intent(this, VideoService.class);
         videoService.putExtra("ID", id);
         startService(videoService);
+    }
+
+    private void startReviewService(int id){
+        Intent reviewService = new Intent(this, ReviewService.class);
+        reviewService.putExtra("ID", id);
+        startService(reviewService);
     }
 
     @Override
@@ -79,6 +105,14 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
                         uri,
                         MovieDetail.VIDEO_COLUMNS,
                         "VIDEOS.MOVIE_ID = ?",
+                        new String[]{String.valueOf(this.MOVIE_ID)},
+                        null);
+            case LOADER_REVIEW:
+                uri = Uri.parse("content://com.rubahapi.review/review");
+                return new CursorLoader(MovieDetail.this,
+                        uri,
+                        MovieDetail.REVIEW_COLUMNS,
+                        "REVIEW.MOVIE_ID = ?",
                         new String[]{String.valueOf(this.MOVIE_ID)},
                         null);
         }
@@ -131,6 +165,10 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
                 mVideoAdapter.UpdateResult(cursor);
                 mVideoAdapter.notifyDataSetChanged();
                 break;
+            case  LOADER_REVIEW:
+                mReviewAdapter.UpdateResult(cursor);
+                mReviewAdapter.notifyDataSetChanged();
+                break;
         }
 
 
@@ -148,6 +186,13 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
     @Override
     public void onVideoClick(String key) {
         Uri uri = Uri.parse("https://www.youtube.com/watch?v="+key);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onReviewClick(String url) {
+        Uri uri = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }

@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class MovieDBHelper extends SQLiteOpenHelper {
 
     public static  final  String DB_NAME = "movie.sqlite";
-    public static  final int VERSION = 3;
+    public static  final int VERSION = 5;
     public static final String TABLE_MOVIES_NAME = "MOVIES";
     public static final String COLUMN_REVIEW_ID = "_id";
     public static final String COLUMN_ID = COLUMN_REVIEW_ID;
@@ -24,13 +24,14 @@ public class MovieDBHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_VIDEOS_NAME = "VIDEOS";
     public static final String COLUMN_VIDEO_ID = COLUMN_REVIEW_ID;
-    public static final String COLUMN_VIDEO_MOVIE_ID = "MOVIE_ID";
+    public static final String COLUMN_REVIEW_MOVIE_ID = "MOVIE_ID";
+    public static final String COLUMN_VIDEO_MOVIE_ID = COLUMN_REVIEW_MOVIE_ID;
     public static final String COLUMN_VIDEO_NAME = "NAME";
     public static final String COLUMN_VIDEO_KEY = "KEY";
     public static final String TABLE_REVIEW_NAME = "REVIEW";
     public static final String COLUMN_REVIEW_AUTHOR = "AUTHOR";
     public static final String COLUMN_REVIEW_CONTENT = "CONTENT";
-    public static final String COLUMN_REVIE_URL = "URL";
+    public static final String COLUMN_REVIEW_URL = "URL";
 
 
     public MovieDBHelper(Context context) {
@@ -63,9 +64,10 @@ public class MovieDBHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_QUERY_REVIEW = "CREATE TABLE " + TABLE_REVIEW_NAME + " (" +
                 COLUMN_REVIEW_ID + " TEXT," +
+                COLUMN_REVIEW_MOVIE_ID + " INTEGER," +
                 COLUMN_REVIEW_AUTHOR + " TEXT," +
                 COLUMN_REVIEW_CONTENT + " TEXT," +
-                COLUMN_REVIE_URL + " TEXT," +
+                COLUMN_REVIEW_URL + " TEXT," +
                 "UNIQUE (" + COLUMN_REVIEW_ID + ") ON CONFLICT REPLACE" +
                 ")";
         sqLiteDatabase.execSQL(SQL_CREATE_QUERY_REVIEW);

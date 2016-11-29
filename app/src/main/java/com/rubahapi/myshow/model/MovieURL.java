@@ -20,4 +20,8 @@ public class MovieURL {
     public static String getVideoURL(int id){
         return BASE_URL + id + "/videos?api_key=" + BuildConfig.TMDB_API_KEY;
     }
+
+    public  static String getReviewURL(int id){
+        return BASE_URL + id + "/reviews?api_key=" + BuildConfig.TMDB_API_KEY;
+    }
 }

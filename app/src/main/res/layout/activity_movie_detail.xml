@@ -105,6 +105,27 @@
                 android:paddingTop="10dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"/>
+            <View
+                android:paddingRight="20dp"
+                android:paddingLeft="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="20dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:textSize="20dp"
+                android:text="Reviews:"/>
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/recyclerview_review"
+                android:paddingTop="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
