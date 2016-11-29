@@ -12,4 +12,8 @@ public class MovieURL {
     public static String getPopularMovie(){
         return  BASE_URL + "popular?api_key=" + BuildConfig.TMDB_API_KEY;
     }
+
+    public static  String getTopRatedMovie(){
+        return  BASE_URL + "top_rated?api_key=" + BuildConfig.TMDB_API_KEY;
+    }
 }

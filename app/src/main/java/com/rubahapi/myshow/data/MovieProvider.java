@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 /**
  * Dibuat Oleh junifar on 11/23/2016.
@@ -56,7 +55,6 @@ public class MovieProvider extends ContentProvider {
     public String getType(Uri uri) {
         switch ((mUriMatcher.match(uri))){
             case MOVIE:
-                Log.i("TEST",CONTENT_AUTHORITY + "/movie");
                 return ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/movie";
         }
         return null;

@@ -53,7 +53,7 @@
         <!-- </service> -->
 
 
-        <!-- <service android:name=".service.MovieService"/> -->
+        <service android:name=".service.MovieService"/>
         <activity android:name=".MovieDetail"
             android:label="Movie Detail"
             android:parentActivityName=".LatestMovieActivity">

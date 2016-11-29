@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.rubahapi.myshow.Utility;
 import com.rubahapi.myshow.data.MovieDBHelper;
 import com.rubahapi.myshow.data.MovieProvider;
 import com.rubahapi.myshow.model.MovieURL;
@@ -32,7 +33,13 @@ public class MovieService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         HttpURLConnection connection = null;
         try{
-            URL url = new URL(MovieURL.getPopularMovie());
+//            URL url = new URL(MovieURL.getPopularMovie());
+            URL url;
+            if(Utility.isPopular(this)){
+                url = new URL(MovieURL.getTopRatedMovie());
+            }else{
+                url = new URL(MovieURL.getPopularMovie());
+            }
             connection = (HttpURLConnection) url.openConnection();
             connection.setReadTimeout(5000);
             connection.setConnectTimeout(5000);
@@ -60,7 +67,7 @@ public class MovieService extends IntentService {
                 cv.put(MovieDBHelper.COLUMN_TITLE, result.getTitle());
                 cv.put(MovieDBHelper.COLUMN_DESCRIPTION, result.getOverview());
                 cv.put(MovieDBHelper.COLUMN_YEARS, result.getReleaseDate());
-                cv.put(MovieDBHelper.COLUMN_IMAGE_PATH,"http://image.tmdb.org/t/p/w185/" + result.getPosterPath());
+                cv.put(MovieDBHelper.COLUMN_IMAGE_PATH,result.getPosterPath());
                 contentValues[i] = cv;
             }
 

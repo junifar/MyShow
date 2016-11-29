@@ -1,7 +1,6 @@
 package com.rubahapi.myshow;
 
 import android.app.LoaderManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,21 +23,12 @@ import com.rubahapi.myshow.adapter.MovieAdapter;
 import com.rubahapi.myshow.data.MovieDBHelper;
 import com.rubahapi.myshow.data.MovieProvider;
 import com.rubahapi.myshow.listener.OnMovieClickListener;
-import com.rubahapi.myshow.model.MovieURL;
-import com.rubahapi.myshow.pojo.popular.PopularMovie;
-import com.rubahapi.myshow.pojo.popular.Result;
-import com.rubahapi.myshow.singleton.GsonSingleton;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
+import com.rubahapi.myshow.service.MovieService;
 
 public class LatestMovieActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, OnMovieClickListener {
 
     public  static final int MOVIE_LOADER = 100;
+    private boolean isPopular;
 
     public static final String[] MOVIE_COLUMNS = {
             MovieDBHelper.TABLE_MOVIES_NAME + "." + MovieDBHelper.COLUMN_ID,
@@ -60,6 +49,9 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
 
         RecyclerView rvContacts = (RecyclerView) findViewById(R.id.rvContacts);
 
+        //check default URL MOvie is popular or top rated
+        this.isPopular = Utility.isPopular(this);
+
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             rvContacts.setLayoutManager(new GridLayoutManager(this,4));
         }else{
@@ -70,15 +62,32 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
 
         getLoaderManager().initLoader(MOVIE_LOADER, null, this);
 
-
 //        MovieSyncAdapter.SyncStart(this);
 
         if(isOnline()){
-            new getPopularMoviesTask().execute();
+//            new getPopularMoviesTask().execute();
+            startMovieService();
         }else
         {
             Toast.makeText(this,"No Connection Available", Toast.LENGTH_LONG);
         }
+    }
+
+    private boolean isMovieCategoryChange(){
+        if(isPopular != Utility.isPopular(this)){
+            isPopular = Utility.isPopular(this);
+            return true;
+        }
+        return false;
+    }
+
+    private void startMovieService(){
+        Intent movieService = new Intent(this, MovieService.class);
+        startService(movieService);
+    }
+
+    public Context getContext(){
+        return this;
     }
 
     @Override
@@ -139,74 +148,11 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
 
     }
 
-
-    class getPopularMoviesTask extends AsyncTask<Void, Void, PopularMovie> {
-        @Override
-        protected void onPostExecute(PopularMovie popularMovie) {
-            super.onPostExecute(popularMovie);
-            movieAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        protected PopularMovie doInBackground(Void... voids) {
-            HttpURLConnection conn = null;
-            try{
-                URL url = new URL(MovieURL.getPopularMovie());
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(5000);
-                conn.setConnectTimeout(5000);
-                conn.setRequestMethod("GET");
-                conn.connect();
-
-                int responseCode = conn.getResponseCode();
-                if(responseCode != HttpURLConnection.HTTP_OK){
-                    return null;
-                }
-
-                InputStream inputStream = conn.getInputStream();
-                if(null == inputStream){
-                    return null;
-                }
-
-                StringBuilder stringBuilder = new StringBuilder();
-
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String strLine;
-
-                while ((strLine = bufferedReader.readLine()) != null){
-                    stringBuilder.append(strLine);
-                }
-
-                PopularMovie popularMovie = GsonSingleton.getGson().fromJson(stringBuilder.toString(), PopularMovie.class);
-                List<Result> results = popularMovie.getResults();
-                ContentValues[] contentValues = new ContentValues[results.size()];
-                for (int i=0; i<results.size(); i++){
-                    Result result = results.get(i);
-                    ContentValues cv = new ContentValues();
-                    cv.put(MovieDBHelper.COLUMN_TITLE, result.getTitle());
-                    cv.put(MovieDBHelper.COLUMN_DESCRIPTION, result.getOverview());
-                    cv.put(MovieDBHelper.COLUMN_YEARS, result.getReleaseDate());
-                    cv.put(MovieDBHelper.COLUMN_IMAGE_PATH, result.getPosterPath());
-                    cv.put(MovieDBHelper.COLUMN_RATING, result.getVoteAverage() + "/10");
-                    contentValues[i] = cv;
-                }
-
-                Uri uri = Uri.parse("content://" + MovieProvider.CONTENT_AUTHORITY + "/movie");
-                getContentResolver().delete(uri,null,null);
-                getContentResolver().bulkInsert(
-                        uri,
-                        contentValues
-                );
-                getContentResolver().notifyChange(uri, null);
-                return popularMovie;
-            } catch (Exception e){
-                return null;
-            } finally {
-                if (null != conn){
-                    conn.disconnect();
-                }
-            }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(isMovieCategoryChange()){
+            startMovieService();
         }
     }
 }
