@@ -3,6 +3,7 @@ package com.rubahapi.myshow;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,13 +14,16 @@ import android.widget.TextView;
 
 import com.rubahapi.myshow.data.MovieDBHelper;
 import com.rubahapi.myshow.data.MovieProvider;
+import com.rubahapi.myshow.service.VideoService;
 import com.squareup.picasso.Picasso;
 
 public class MovieDetail extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String EXTRA_ID = "ID";
+    public static final String EXTRA_MOVIE_ID = "MOVIE_ID";
     public static final int LOADER_RAMALAN_DETAIL = 200;
     private int ID;
+    private int MOVIE_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +31,17 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
         setContentView(R.layout.activity_movie_detail);
 
         this.ID = getIntent().getIntExtra(EXTRA_ID, 0);
+        this.MOVIE_ID = getIntent().getIntExtra(EXTRA_MOVIE_ID,0);
 
         getLoaderManager().initLoader(LOADER_RAMALAN_DETAIL, null, this);
+
+        startVideoService(this.MOVIE_ID);
+    }
+
+    private void startVideoService(int id){
+        Intent videoService = new Intent(this, VideoService.class);
+        videoService.putExtra("ID", id);
+        startService(videoService);
     }
 
     @Override

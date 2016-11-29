@@ -4,13 +4,13 @@ import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
-import com.rubahapi.myshow.Utility;
-import com.rubahapi.myshow.data.MovieDBHelper;
 import com.rubahapi.myshow.data.MovieProvider;
+import com.rubahapi.myshow.data.VideoDBHelper;
 import com.rubahapi.myshow.model.MovieURL;
-import com.rubahapi.myshow.pojo.popular.PopularMovie;
-import com.rubahapi.myshow.pojo.popular.Result;
+import com.rubahapi.myshow.pojo.video.Result;
+import com.rubahapi.myshow.pojo.video.Video;
 import com.rubahapi.myshow.singleton.GsonSingleton;
 
 import java.io.BufferedReader;
@@ -21,25 +21,23 @@ import java.net.URL;
 import java.util.List;
 
 /**
- * Created by prasetia on 11/24/2016.
+ * Created by prasetia on 11/29/2016.
  */
 
-public class MovieService extends IntentService {
-    public MovieService() {
-        super("Movie");
+public class VideoService extends IntentService {
+
+    private int id;
+
+    public VideoService() {
+        super("Video");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         HttpURLConnection connection = null;
         try{
-//            URL url = new URL(MovieURL.getPopularMovie());
-            URL url;
-            if(Utility.isPopular(this)){
-                url = new URL(MovieURL.getTopRatedMovie());
-            }else{
-                url = new URL(MovieURL.getPopularMovie());
-            }
+            id = intent.getIntExtra("ID",0);
+            URL url = new URL(MovieURL.getVideoURL(id));
             connection = (HttpURLConnection) url.openConnection();
             connection.setReadTimeout(5000);
             connection.setConnectTimeout(5000);
@@ -58,32 +56,32 @@ public class MovieService extends IntentService {
                 stringBuilder.append(strLine);
             }
 
-            PopularMovie popularMovie = GsonSingleton.getGson().fromJson(stringBuilder.toString(), PopularMovie.class);
-            List<Result> results = popularMovie.getResults();
+            Video video = GsonSingleton.getGson().fromJson(stringBuilder.toString(), Video.class);
+            List<Result> results = video.getResults();
             ContentValues[] contentValues = new ContentValues[results.size()];
             for (int i=0; i<results.size(); i++){
                 Result result = results.get(i);
                 ContentValues cv = new ContentValues();
-                cv.put(MovieDBHelper.COLUMN_ID, result.getId());
-                cv.put(MovieDBHelper.COLUMN_TITLE, result.getTitle());
-                cv.put(MovieDBHelper.COLUMN_DESCRIPTION, result.getOverview());
-                cv.put(MovieDBHelper.COLUMN_YEARS, result.getReleaseDate());
-                cv.put(MovieDBHelper.COLUMN_IMAGE_PATH,result.getPosterPath());
+                cv.put(VideoDBHelper.COLUMN_VIDEO_ID, result.getId());
+                cv.put(VideoDBHelper.COLUMN_VIDEO_MOVIE_ID, id);
+                cv.put(VideoDBHelper.COLUMN_VIDEO_NAME, result.getName());
+                cv.put(VideoDBHelper.COLUMN_VIDEO_KEY, result.getKey());
                 contentValues[i] = cv;
             }
 
-            Uri uri = Uri.parse("content://" + MovieProvider.CONTENT_AUTHORITY + "/movie");
-            getContentResolver().delete(uri,null,null);
+            Uri uri = Uri.parse("content://" + MovieProvider.CONTENT_AUTHORITY + "/video");
+//            getContentResolver().delete(uri,null,null);
             getContentResolver().bulkInsert(
                     uri,
                     contentValues
             );
             getContentResolver().notifyChange(uri, null);
-        }catch (Exception e){
 
+        }catch (Exception e){
+            Log.i("ERROR", e.getMessage());
         }finally {
             if(null != connection){
-                connection.disconnect();
+                    connection.disconnect();
             }
         }
     }

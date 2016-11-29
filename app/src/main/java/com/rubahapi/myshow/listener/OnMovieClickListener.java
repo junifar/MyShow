@@ -5,5 +5,5 @@ package com.rubahapi.myshow.listener;
  */
 
 public interface OnMovieClickListener {
-    void onMovieClick(int id);
+    void onMovieClick(int id, int movie_id);
 }

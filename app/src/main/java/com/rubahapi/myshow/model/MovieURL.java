@@ -16,4 +16,8 @@ public class MovieURL {
     public static  String getTopRatedMovie(){
         return  BASE_URL + "top_rated?api_key=" + BuildConfig.TMDB_API_KEY;
     }
+
+    public static String getVideoURL(int id){
+        return BASE_URL + id + "/videos?api_key=" + BuildConfig.TMDB_API_KEY;
+    }
 }

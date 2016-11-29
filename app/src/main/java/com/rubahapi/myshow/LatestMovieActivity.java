@@ -140,10 +140,11 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
     }
 
     @Override
-    public void onMovieClick(int id) {
+    public void onMovieClick(int id, int movie_id) {
         Log.i("INFO", String.valueOf(id));
         Intent intent = new Intent(LatestMovieActivity.this, MovieDetail.class);
         intent.putExtra(MovieDetail.EXTRA_ID, id);
+        intent.putExtra(MovieDetail.EXTRA_MOVIE_ID, movie_id);
         this.startActivity(intent);
 
     }

@@ -92,7 +92,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         public void onClick(View view) {
             int position = getAdapterPosition();
             cursor.moveToPosition(position);
-            onMovieClickListener.onMovieClick(position);
+            onMovieClickListener.onMovieClick(position, cursor.getInt(getArrayPosition(MovieDBHelper.COLUMN_ID)));
         }
     }
 }
