@@ -49,6 +49,12 @@
             android:exported="false"
             android:syncable="true"/>
 
+        <provider
+            android:authorities="com.rubahapi.favourite"
+            android:name=".data.FavouriteProvider"
+            android:exported="false"
+            android:syncable="true"/>
+
 
         <!-- <service android:name=".service.authservice.MovieAuthService"> -->
         <!-- <intent-filter> -->

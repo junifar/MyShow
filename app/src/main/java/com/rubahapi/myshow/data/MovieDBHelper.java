@@ -24,7 +24,8 @@ public class MovieDBHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_VIDEOS_NAME = "VIDEOS";
     public static final String COLUMN_VIDEO_ID = COLUMN_REVIEW_ID;
-    public static final String COLUMN_REVIEW_MOVIE_ID = "MOVIE_ID";
+    public static final String COLUMN_FAVOURITE_MOVIE_ID = "MOVIE_ID";
+    public static final String COLUMN_REVIEW_MOVIE_ID = COLUMN_FAVOURITE_MOVIE_ID;
     public static final String COLUMN_VIDEO_MOVIE_ID = COLUMN_REVIEW_MOVIE_ID;
     public static final String COLUMN_VIDEO_NAME = "NAME";
     public static final String COLUMN_VIDEO_KEY = "KEY";
@@ -32,6 +33,7 @@ public class MovieDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_REVIEW_AUTHOR = "AUTHOR";
     public static final String COLUMN_REVIEW_CONTENT = "CONTENT";
     public static final String COLUMN_REVIEW_URL = "URL";
+    public static final String TABLE_FAVOURITE_NAME = "FAVOURITE";
 
 
     public MovieDBHelper(Context context) {
@@ -71,6 +73,13 @@ public class MovieDBHelper extends SQLiteOpenHelper {
                 "UNIQUE (" + COLUMN_REVIEW_ID + ") ON CONFLICT REPLACE" +
                 ")";
         sqLiteDatabase.execSQL(SQL_CREATE_QUERY_REVIEW);
+
+        final String SQL_CREATE_QUERY_FAVOURITE = "CREATE TABEL " + TABLE_FAVOURITE_NAME + " (" +
+                COLUMN_FAVOURITE_MOVIE_ID + " INTEGER," +
+                "UNIQUE (" + COLUMN_FAVOURITE_MOVIE_ID + ") ON CONFLICT REPLACE" +
+                ")";
+
+        sqLiteDatabase.execSQL(SQL_CREATE_QUERY_FAVOURITE);;
     }
 
     @Override
@@ -78,6 +87,7 @@ public class MovieDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_MOVIES_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_VIDEOS_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_REVIEW_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVOURITE_NAME);
         onCreate(sqLiteDatabase);
     }
 }

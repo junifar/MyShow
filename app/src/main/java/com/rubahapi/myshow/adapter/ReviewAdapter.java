@@ -59,7 +59,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             cursor.moveToPosition(position);
             holder.textViewAuthor.setText(cursor.getString(getArrayPosition(MovieDBHelper.COLUMN_REVIEW_AUTHOR)));
             holder.textViewContent.setText(cursor.getString(getArrayPosition(MovieDBHelper.COLUMN_REVIEW_CONTENT)));
-            holder.textViewUrl.setText(cursor.getString(getArrayPosition(MovieDBHelper.COLUMN_REVIEW_URL)));
+//            holder.textViewUrl.setText(cursor.getString(getArrayPosition(MovieDBHelper.COLUMN_REVIEW_URL)));
         }
     }
 
@@ -75,14 +75,14 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     public class ViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView textViewAuthor;
         public TextView textViewContent;
-        public TextView textViewUrl;
+//        public TextView textViewUrl;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             textViewAuthor = (TextView) itemView.findViewById(R.id.textViewAuthor);
             textViewContent = (TextView) itemView.findViewById(R.id.textViewContent);
-            textViewUrl = (TextView) itemView.findViewById(R.id.textViewURL);
+//            textViewUrl = (TextView) itemView.findViewById(R.id.textViewURL);
             itemView.setOnClickListener(this);
         }
 
