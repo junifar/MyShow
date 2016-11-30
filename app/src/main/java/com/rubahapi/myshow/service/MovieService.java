@@ -73,7 +73,7 @@ public class MovieService extends IntentService {
             }
 
             Uri uri = Uri.parse("content://" + MovieProvider.CONTENT_AUTHORITY + "/movie");
-            getContentResolver().delete(uri,null,null);
+//            getContentResolver().delete(uri,null,null);
             getContentResolver().bulkInsert(
                     uri,
                     contentValues
