@@ -14,4 +14,9 @@ public class Utility {
         return sharedPreferences.getString(context.getString(R.string.pref_movie_category_key), context.getString(R.string.pref_popular))
                 .equals(context.getString(R.string.pref_popular));
     }
+
+    public static String getCategoryState(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return  sharedPreferences.getString(context.getString(R.string.pref_movie_category_key),context.getString(R.string.pref_popular));
+    }
 }

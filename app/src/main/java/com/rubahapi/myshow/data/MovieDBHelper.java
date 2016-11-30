@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class MovieDBHelper extends SQLiteOpenHelper {
 
     public static  final  String DB_NAME = "movie.sqlite";
-    public static  final int VERSION = 6;
+    public static  final int VERSION = 7;
     public static final String TABLE_MOVIES_NAME = "MOVIES";
     public static final String COLUMN_REVIEW_ID = "_id";
     public static final String COLUMN_ID = COLUMN_REVIEW_ID;
@@ -33,7 +33,8 @@ public class MovieDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_REVIEW_AUTHOR = "AUTHOR";
     public static final String COLUMN_REVIEW_CONTENT = "CONTENT";
     public static final String COLUMN_REVIEW_URL = "URL";
-    public static final String TABLE_FAVOURITE_NAME = "FAVOURITE";
+    public static final String COLUMN_FAVOURITE = "FAVOURITE";
+    public static final String TABLE_FAVOURITE_NAME = COLUMN_FAVOURITE;
 
 
     public MovieDBHelper(Context context) {
@@ -50,6 +51,7 @@ public class MovieDBHelper extends SQLiteOpenHelper {
                 COLUMN_RATING + " TEXT," +
                 COLUMN_DESCRIPTION + " TEXT," +
                 COLUMN_IMAGE_PATH + " TEXT," +
+                COLUMN_FAVOURITE + " TEXT," +
                 " UNIQUE (" + COLUMN_ID + ") ON CONFLICT REPLACE" +
                 ")";
         sqLiteDatabase.execSQL(SQL_CREATE_QUERY);

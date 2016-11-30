@@ -1,6 +1,7 @@
 package com.rubahapi.myshow;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -29,6 +30,7 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
 
     public  static final int MOVIE_LOADER = 100;
     private boolean isPopular;
+    private String categoryState;
 
     public static final String[] MOVIE_COLUMNS = {
             MovieDBHelper.TABLE_MOVIES_NAME + "." + MovieDBHelper.COLUMN_ID,
@@ -51,6 +53,7 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
 
         //check default URL MOvie is popular or top rated
         this.isPopular = Utility.isPopular(this);
+        this.categoryState =Utility.getCategoryState(this);
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             rvContacts.setLayoutManager(new GridLayoutManager(this,4));
@@ -79,14 +82,6 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
 //        getContentResolver().insert(uri,cv);
 //        getContentResolver().notifyChange(uri, null);
 
-    }
-
-    private boolean isMovieCategoryChange(){
-        if(isPopular != Utility.isPopular(this)){
-            isPopular = Utility.isPopular(this);
-            return true;
-        }
-        return false;
     }
 
     private void startMovieService(){
@@ -160,8 +155,92 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
     @Override
     protected void onResume() {
         super.onResume();
-        if(isMovieCategoryChange()){
-            startMovieService();
+        isMovieCategoryChange();
+//        if(isMovieCategoryChange()){
+//            startMovieService();
+//        }
+    }
+
+    private void updateMovieDBvalue(String MOVIE_ID){
+        Uri uri = Uri.parse("content://com.rubahapi.myshow/movie");
+        Cursor cursor = getContentResolver().query(uri,
+                new String[]{
+                        "_id",
+                        "TITLE",
+                        "YEARS",
+                        "DURATION",
+                        "RATING",
+                        "DESCRIPTION",
+                        "IMAGE_PATH",
+                        "FAVOURITE"
+                },"_id = ?",
+                new String[]{MOVIE_ID},
+                null);
+        if(null != cursor){
+            int countCursor = cursor.getCount();
+
+            ContentValues cv = new ContentValues();
+            for(int i=0; i<countCursor; i++){
+                cursor.moveToPosition(i);
+                cv.put("_id",cursor.getString(0));
+                cv.put("TITLE", cursor.getString(1));
+                cv.put("YEARS", cursor.getInt(2));
+                cv.put("DURATION", cursor.getString(3));
+                cv.put("RATING", cursor.getString(4));
+                cv.put("IMAGE_PATH", cursor.getString(5));
+                cv.put("FAVOURITE", "1");
+            }
+
+            getContentResolver().update(uri,
+                    cv,"_id = ?",
+                    new String[]{MOVIE_ID});
         }
+    }
+
+    private void flagFavouriteMovies(){
+        Uri uri = Uri.parse("content://com.rubahapi.favourite/favourite");
+
+        Cursor cursor = getContentResolver().query(uri,
+                new String[]{
+                        "MOVIE_ID"
+                },null,null,null);
+
+        if(null != cursor){
+            int countCursor = cursor.getCount();
+
+            for(int i=0; i < countCursor; i++){
+                cursor.moveToPosition(i);
+                updateMovieDBvalue(cursor.getString(0));
+            }
+
+        }
+    }
+
+    private Cursor getFavouriteMovie(){
+        Uri uri = Uri.parse("content://com.rubahapi.myshow/movie");
+        return getContentResolver().query(uri,
+                new String[]{
+                        "IMAGE_PATH"
+                },"FAVOURITE = ?",
+                new String[]{"1"},null);
+    }
+
+    private boolean isMovieCategoryChange(){
+        if(this.categoryState != Utility.getCategoryState(this)){
+            this.categoryState = Utility.getCategoryState(this);
+            if(this.categoryState == getString(R.string.pref_favourite)){
+                flagFavouriteMovies();
+                movieAdapter.updateResult(getFavouriteMovie());
+            }else{
+                startMovieService();
+            }
+            return true;
+        }
+//
+//        if(isPopular != Utility.isPopular(this)){
+//            isPopular = Utility.isPopular(this);
+//            return true;
+//        }
+        return false;
     }
 }
