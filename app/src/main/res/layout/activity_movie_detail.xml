@@ -70,7 +70,8 @@
                         android:layout_height="wrap_content"
                         android:background="#009587"
                         android:text="MARK AS FAVORITE"
-                        android:textColor="#ffffff"/>
+                        android:textColor="#ffffff"
+                        android:id="@+id/buttonFavourite"/>
                 </LinearLayout>
             </LinearLayout>
             <TextView

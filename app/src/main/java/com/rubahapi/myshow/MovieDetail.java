@@ -1,6 +1,7 @@
 package com.rubahapi.myshow;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -12,8 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rubahapi.myshow.adapter.ReviewAdapter;
 import com.rubahapi.myshow.adapter.VideoAdapter;
@@ -58,6 +62,16 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
         this.ID = getIntent().getIntExtra(EXTRA_ID, 0);
         this.MOVIE_ID = getIntent().getIntExtra(EXTRA_MOVIE_ID,0);
 
+        Button btnFavourite = (Button) findViewById(R.id.buttonFavourite);
+
+        btnFavourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                markAsFavourite();
+                Toast.makeText(MovieDetail.this, "Saved as your favourites movies", Toast.LENGTH_LONG).show();
+            }
+        });
+
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_movie_detail);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MovieDetail.this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -76,6 +90,16 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
 
         startVideoService(this.MOVIE_ID);
         startReviewService(this.MOVIE_ID);
+    }
+
+    private int markAsFavourite(){
+        Uri uri = Uri.parse("content://com.rubahapi.favourite/favourite");
+        ContentValues cv = new ContentValues();
+        cv.put(MovieDBHelper.COLUMN_FAVOURITE_MOVIE_ID, this.MOVIE_ID);
+        getContentResolver().insert(uri,cv);
+        getContentResolver().notifyChange(uri, null);
+
+        return 1;
     }
 
     private void startVideoService(int id){

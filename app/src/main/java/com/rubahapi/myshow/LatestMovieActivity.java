@@ -1,7 +1,6 @@
 package com.rubahapi.myshow;
 
 import android.app.LoaderManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -73,12 +72,12 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
             Toast.makeText(this,"No Connection Available", Toast.LENGTH_LONG);
         }
 
-        ContentValues cv = new ContentValues();
-        cv.put(MovieDBHelper.COLUMN_FAVOURITE_MOVIE_ID, 1);
+//        ContentValues cv = new ContentValues();
+//        cv.put(MovieDBHelper.COLUMN_FAVOURITE_MOVIE_ID, 1);
 
-        Uri uri = Uri.parse("content://com.rubahapi.favourite/favourite");
-        getContentResolver().insert(uri,cv);
-        getContentResolver().notifyChange(uri, null);
+//        Uri uri = Uri.parse("content://com.rubahapi.favourite/favourite");
+//        getContentResolver().insert(uri,cv);
+//        getContentResolver().notifyChange(uri, null);
 
     }
 
