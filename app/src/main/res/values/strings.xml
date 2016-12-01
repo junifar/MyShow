@@ -7,4 +7,6 @@
     <string name="pref_popular" translatable="false">popular</string>
     <string name="pref_top_rated" translatable="false">top_rated</string>
     <string name="pref_movie_category_key">movie_category</string>
+    <string name="pref_favourite" translatable="false">favourite</string>
+    <string name="pref_favourite_label">Favourite</string>
 </resources>
