@@ -94,12 +94,31 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
 
     private int markAsFavourite(){
         Uri uri = Uri.parse("content://com.rubahapi.favourite/favourite");
+
+        Cursor movieData = getMovieList();
+        movieData.moveToPosition(0);
+
         ContentValues cv = new ContentValues();
         cv.put(MovieDBHelper.COLUMN_FAVOURITE_MOVIE_ID, this.MOVIE_ID);
+        cv.put(MovieDBHelper.COLUMN_TITLE, movieData.getString(getArrayPosition(MovieDBHelper.COLUMN_TITLE)));
+        cv.put(MovieDBHelper.COLUMN_YEARS, movieData.getString(getArrayPosition(MovieDBHelper.COLUMN_YEARS)));
+        cv.put(MovieDBHelper.COLUMN_DURATION, movieData.getString(getArrayPosition(MovieDBHelper.COLUMN_DURATION)));
+        cv.put(MovieDBHelper.COLUMN_RATING, movieData.getString(getArrayPosition(MovieDBHelper.COLUMN_RATING)));
+        cv.put(MovieDBHelper.COLUMN_DESCRIPTION, movieData.getString(getArrayPosition(MovieDBHelper.COLUMN_DESCRIPTION)));
+        cv.put(MovieDBHelper.COLUMN_IMAGE_PATH, movieData.getString(getArrayPosition(MovieDBHelper.COLUMN_IMAGE_PATH)));
         getContentResolver().insert(uri,cv);
         getContentResolver().notifyChange(uri, null);
-
         return 1;
+    }
+
+    private Cursor getMovieList(){
+
+        Uri uri = Uri.parse("content://" + MovieProvider.CONTENT_AUTHORITY + "/movie");
+
+        return getContentResolver().query(uri,
+                LatestMovieActivity.MOVIE_COLUMNS,
+                "_id = ?",
+                new String[]{String.valueOf(MOVIE_ID)},null);
     }
 
     private void startVideoService(int id){
