@@ -179,21 +179,25 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
         if(null != cursor){
             int countCursor = cursor.getCount();
 
-            ContentValues cv = new ContentValues();
-            for(int i=0; i<countCursor; i++){
-                cursor.moveToPosition(i);
-                cv.put("_id",cursor.getString(0));
-                cv.put("TITLE", cursor.getString(1));
-                cv.put("YEARS", cursor.getInt(2));
-                cv.put("DURATION", cursor.getString(3));
-                cv.put("RATING", cursor.getString(4));
-                cv.put("IMAGE_PATH", cursor.getString(5));
-                cv.put("FAVOURITE", "1");
-            }
+            if(countCursor != 0){
+                ContentValues cv = new ContentValues();
+                for(int i=0; i<countCursor; i++){
+                    cursor.moveToPosition(i);
+                    cv.put("_id",cursor.getString(0));
+                    cv.put("TITLE", cursor.getString(1));
+                    cv.put("YEARS", cursor.getInt(2));
+                    cv.put("DURATION", cursor.getString(3));
+                    cv.put("RATING", cursor.getString(4));
+                    cv.put("DESCRIPTION", cursor.getString(5));
+                    cv.put("IMAGE_PATH", cursor.getString(6));
+                    cv.put("FAVOURITE", "1");
+                }
 
-            getContentResolver().update(uri,
-                    cv,"_id = ?",
-                    new String[]{MOVIE_ID});
+                getContentResolver().update(uri,
+                        cv,"_id = ?",
+                        new String[]{MOVIE_ID});
+                getContentResolver().notifyChange(uri, null);
+            }
         }
     }
 
@@ -231,6 +235,7 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
             if(this.categoryState == getString(R.string.pref_favourite)){
                 flagFavouriteMovies();
                 movieAdapter.updateResult(getFavouriteMovie());
+                movieAdapter.notifyDataSetChanged();
             }else{
                 startMovieService();
             }
