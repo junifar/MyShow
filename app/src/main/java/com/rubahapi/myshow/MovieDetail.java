@@ -99,7 +99,7 @@ public class MovieDetail extends AppCompatActivity implements LoaderManager.Load
         movieData.moveToPosition(0);
 
         ContentValues cv = new ContentValues();
-        cv.put(MovieDBHelper.COLUMN_FAVOURITE_MOVIE_ID, this.MOVIE_ID);
+        cv.put(MovieDBHelper.COLUMN_ID, this.MOVIE_ID);
         cv.put(MovieDBHelper.COLUMN_TITLE, movieData.getString(getArrayPosition(MovieDBHelper.COLUMN_TITLE)));
         cv.put(MovieDBHelper.COLUMN_YEARS, movieData.getString(getArrayPosition(MovieDBHelper.COLUMN_YEARS)));
         cv.put(MovieDBHelper.COLUMN_DURATION, movieData.getString(getArrayPosition(MovieDBHelper.COLUMN_DURATION)));

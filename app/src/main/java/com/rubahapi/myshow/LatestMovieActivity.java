@@ -27,11 +27,23 @@ import com.rubahapi.myshow.service.MovieService;
 
 public class LatestMovieActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, OnMovieClickListener {
 
-    public  static final int MOVIE_LOADER = 100;
+    public static final int MOVIE_LOADER = 100;
+    public static final int FAVOURITE_LOADER = 200;
     private boolean isPopular;
+    private String currentState;
 
     public static final String[] MOVIE_COLUMNS = {
             MovieDBHelper.TABLE_MOVIES_NAME + "." + MovieDBHelper.COLUMN_ID,
+            MovieDBHelper.COLUMN_IMAGE_PATH,
+            MovieDBHelper.COLUMN_TITLE,
+            MovieDBHelper.COLUMN_YEARS,
+            MovieDBHelper.COLUMN_DURATION,
+            MovieDBHelper.COLUMN_RATING,
+            MovieDBHelper.COLUMN_DESCRIPTION
+    };
+
+    public static final String[] FAVOURITE_COLUMNS = {
+            MovieDBHelper.TABLE_FAVOURITE_NAME + "." + MovieDBHelper.COLUMN_ID,
             MovieDBHelper.COLUMN_IMAGE_PATH,
             MovieDBHelper.COLUMN_TITLE,
             MovieDBHelper.COLUMN_YEARS,
@@ -51,6 +63,7 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
 
         //check default URL MOvie is popular or top rated
         this.isPopular = Utility.isPopular(this);
+        this.currentState = Utility.getCategoryState(this);
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             rvContacts.setLayoutManager(new GridLayoutManager(this,4));
@@ -60,7 +73,14 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
         movieAdapter = new MovieAdapter(null, this, this);
         rvContacts.setAdapter(movieAdapter);
 
-        getLoaderManager().initLoader(MOVIE_LOADER, null, this);
+        String prefFavourite = getResources().getString(R.string.pref_favourite);
+//        String currentState =  Utility.getCategoryState(this);
+        if(Utility.getCategoryState(this).equals(prefFavourite)){
+            getLoaderManager().initLoader(FAVOURITE_LOADER, null, this);
+        }else {
+            getLoaderManager().initLoader(MOVIE_LOADER, null, this);
+        }
+
 
 //        MovieSyncAdapter.SyncStart(this);
 
@@ -77,6 +97,7 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
     private boolean isMovieCategoryChange(){
         if(isPopular != Utility.isPopular(this)){
             isPopular = Utility.isPopular(this);
+            currentState = Utility.getCategoryState(this);
             return true;
         }
         return false;
@@ -118,14 +139,26 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         Uri uri = Uri.parse("content://" + MovieProvider.CONTENT_AUTHORITY + "/movie");
-        if (i == MOVIE_LOADER){
-            return new CursorLoader(LatestMovieActivity.this,
-                    uri,
-                    MOVIE_COLUMNS,
-                    null,
-                    null,
-                    null);
+        Uri uriFavourite = Uri.parse("content://com.rubahapi.favourite/favourite");
+        switch (i){
+            case MOVIE_LOADER:
+                return new CursorLoader(LatestMovieActivity.this,
+                        uri,
+                        MOVIE_COLUMNS,
+                        null,
+                        null,
+                        null);
+            case FAVOURITE_LOADER:
+                return new CursorLoader(LatestMovieActivity.this,
+                        uriFavourite,
+                        FAVOURITE_COLUMNS,
+                        null,
+                        null,
+                        null);
         }
+
+//        if (i == MOVIE_LOADER){
+//        }
         return null;
     }
 
@@ -153,8 +186,40 @@ public class LatestMovieActivity extends AppCompatActivity implements LoaderMana
     @Override
     protected void onResume() {
         super.onResume();
-        if(isMovieCategoryChange()){
-            startMovieService();
+        String prefFavourite = getResources().getString(R.string.pref_favourite);
+//        String currentState =  Utility.getCategoryState(this);
+        if(Utility.getCategoryState(this).equals(prefFavourite) && !Utility.getCategoryState(this).equals(currentState)) {
+            setFavouriteMovieAdapterSource();
+        }else{
+            if (isMovieCategoryChange()) {
+                startMovieService();
+                setOtherMovieAdapterResource();
+            }
         }
+
+    }
+
+    private void setOtherMovieAdapterResource(){
+        Uri uri = Uri.parse("content://" + MovieProvider.CONTENT_AUTHORITY + "/movie");
+
+        Cursor cursor = getContentResolver().query(uri,
+                MOVIE_COLUMNS,
+                null,
+                null,
+                null);
+        movieAdapter.updateResult(cursor);
+        movieAdapter.notifyDataSetChanged();
+    }
+
+    private void setFavouriteMovieAdapterSource() {
+        Uri uriFavourite = Uri.parse("content://com.rubahapi.favourite/favourite");
+
+        Cursor cursor = getContentResolver().query(uriFavourite,
+                FAVOURITE_COLUMNS,
+                null,
+                null,
+                null);
+        movieAdapter.updateResult(cursor);
+        movieAdapter.notifyDataSetChanged();
     }
 }

@@ -36,9 +36,9 @@ public class MovieService extends IntentService {
 //            URL url = new URL(MovieURL.getPopularMovie());
             URL url;
             if(Utility.isPopular(this)){
-                url = new URL(MovieURL.getTopRatedMovie());
-            }else{
                 url = new URL(MovieURL.getPopularMovie());
+            }else{
+                url = new URL(MovieURL.getTopRatedMovie());
             }
             connection = (HttpURLConnection) url.openConnection();
             connection.setReadTimeout(5000);
